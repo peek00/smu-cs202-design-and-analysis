@@ -27,3 +27,12 @@ for _ in range(num_line):
     a = [int(s) for s in sys.stdin.readline().split()]
     m, k, n = a[0], a[1], a[2]
     print(power_modulo(m, k, n))
+
+### Complexity Analysis
+
+"""
+Binary_Exponention
+The time complexity of this is T(k) = T(k/2) + O(1). This can be simplified to O(log k).
+Assuming the modulo % operation takes O(1) time, the complexity of this function will be dominated by 
+the recursive call to binary_exponention, hence overall time complexity is O(log k).
+"""
