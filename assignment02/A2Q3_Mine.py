@@ -20,81 +20,111 @@ class MinCoin:
     def add_plan(self, p):
         self.plan.append(p)
 
-m = len(denom)
-n = 12897
-n = 6006
+
+class MinSumListHeap:
+    def __init__(self):
+        self.heap = []
+
+    def add_list(self, new_plan):
+        self.heap.append(new_plan)
+        self._heapify_up(len(self.heap) - 1)
+
+    def _heapify_up(self,index):
+        while index > 0:
+            parent = (index - 1) // 2
+            if self._get_sum(self.heap[index]) < self._get_sum(self.heap[parent]):
+                self.heap[index], self.heap[parent] = self.heap[parent], self.heap[index]
+                index = parent
+            else:
+                break
+    def _heapify_down(self, index):
+        while True:
+            left_child_index = 2 * index + 1
+            right_child_index = 2 * index + 2
+            smallest = index
+
+            if (left_child_index < len(self.heap) and
+                    self._get_sum(self.heap[left_child_index]) < self._get_sum(self.heap[smallest])):
+                smallest = left_child_index
+
+            if (right_child_index < len(self.heap) and
+                    self._get_sum(self.heap[right_child_index]) < self._get_sum(self.heap[smallest])):
+                smallest = right_child_index
+
+            if smallest != index:
+                self.heap[index], self.heap[smallest] = self.heap[smallest], self.heap[index]
+                index = smallest
+            else:
+                break
+    def _get_sum(self, lst):
+        return sum(lst)
+    
+    def __iter__(self):
+        return iter(self.data)
+    
+print("========Testing minSumListHeap========")
+minSumListHeap = MinSumListHeap()
+minSumListHeap.add_list([1,0,0])
+minSumListHeap.add_list([0,0,2])
+minSumListHeap.add_list([0,0,3])    
+minSumListHeap.add_list([0,4,3])    
+minSumListHeap.add_list([0,2,0])
+minSumListHeap.add_list([2,0,0])
+minSumListHeap.add_list([5,0,0])
+
+for plan in minSumListHeap.heap:
+    print(plan)
+
+# maybe we start by modifying minCoin
+# I need it to not just store the smallest number of coins, but use a deque based on the number of coins to be stored
+
+# denom = [(1,2), (2,1)]
+# n = 4
+
+# m = len(denom)
+# n = 12897
+# n = 6006
 # n = 88
 
-start_time = time.time()
+# start_time = time.time()
 
 
-min_coin_with_plan = [None] * (n + 1)
-min_coin_with_plan[0] = MinCoin(0, [0] * m)
+# min_coin_with_plan = [None] * (n + 1)
+# min_coin_with_plan[0] = MinCoin(0, [0] * m)
 
-for i in range(m): # suppose we already have solutions using denom[0], denom[1], ..., denom[i-1], now we consider using denom[i]
-    for j in range(1, n+1): # consider the min coin problem with sum j cents
-        if j == 6006:
-            print(f"Checking for target {j} and denom {i} which is {denom[i][0]}")
-            print(f"Condition 1 {j >= denom[i][0]} and {min_coin_with_plan[j - denom[i][0]] is not None}")
-            try:
-                print(f" we are checking if {j - denom[i][0]} is not None, and it is indeed {min_coin_with_plan[j - denom[i][0]].plan}")
-            except:
-                pass
-        if j >= denom[i][0] and min_coin_with_plan[j - denom[i][0]] is not None: # is it possible to use denom[i][0]? if yes, we can make up j cents by putting 1 coin of denom[i][0] and the min coin solution for j-denom[i][0]
-            for p in min_coin_with_plan[j - denom[i][0]].plan: # for each possible plan of making j-denom[i][0]
-                if p[i] < denom[i][1]: # now I have a better solution, build a new obj as a solution for j
-                    if min_coin_with_plan[j] is None or min_coin_with_plan[j - denom[i][0]].num_coin + 1 < min_coin_with_plan[j].num_coin: # must check if there is enough supply of denom[i][0]
-                        p_new = p.copy()
-                        p_new[i] += 1 # add one coin of denom[i][0]
-                        min_coin_with_plan[j] = MinCoin(min_coin_with_plan[j - denom[i][0]].num_coin + 1, p_new)
-                    elif min_coin_with_plan[j - denom[i][0]].num_coin + 1 == min_coin_with_plan[j].num_coin: # now I have an equally good solution, only need to add the plan
-                        p_new = p.copy()
-                        p_new[i] += 1 # add one coin of denom[i][0]
-                        min_coin_with_plan[j].add_plan(p_new)
-                else:
-                    # Since we used up all our denoms, why not I take J - the sum of all of the curret denom and find it?
-
-                    # If I get here, what it means is that the current sum j is greater than my denom considered
-                    # If I take j - the current denom, i have a solution for the remainder
-                    # But I do not have any more coins of the current denom to use
-                    # So what should I do? 
-                    p_new = min_coin_with_plan[j - p[i] * denom[i][0]].plan[0].copy()
-                    p_new[i] += p[i]
-                    if min_coin_with_plan[j] is None or min_coin_with_plan[j - p[i] * denom[i][0]].num_coin + p[i] < min_coin_with_plan[j].num_coin:
-                        min_coin_with_plan[j] = MinCoin(min_coin_with_plan[j - p[i] * denom[i][0]].num_coin + p[i], p_new)
-                    elif min_coin_with_plan[j - p[i] * denom[i][0]].num_coin + p[i] == min_coin_with_plan[j].num_coin:
-                        min_coin_with_plan[j].add_plan(p_new)
-
-                    print(f"We got here! We are looking at denom {denom[i][0]} for target {j} and p is {p} and p[i] is {p[i]} and denom[i][1] is {denom[i][1]}")
-                    print(f"So if we minus {p[i] * denom[i][0]} from {j} we get  {j - p[i] * denom[i][0]}, and the plan for that is {min_coin_with_plan[j - p[i] * denom[i][0]].plan}")
-                    pass
-                # If I do not have a solution using the current denomination, i should take 
-                # j - all the various denoms in front 
-                # else:
-                #     print("We are here")
-                #     for i2 in range(m):
-                #         if i2 == i:
-                #             continue
-                #         # 6006 - 1 = 6005 
-                #         if min_coin_with_plan[j - denom[i2][0]] is not None:
-                #             for p in min_coin_with_plan[j - denom[i2][0]].plan:
-                #                 if p[i2] < denom[i2][1]:
-                #                     if min_coin_with_plan[j] is None or min_coin_with_plan[j - denom[i2][0]].num_coin + 1 < min_coin_with_plan[j].num_coin:
-                #                         p_new = p.copy()
-                #                         p_new[i2] += 1
-                #                         min_coin_with_plan[j] = MinCoin(min_coin_with_plan[j - denom[i2][0]].num_coin + 1, p_new)
-                #                     elif min_coin_with_plan[j - denom[i2][0]].num_coin + 1 == min_coin_with_plan[j].num_coin:
-                #                         p_new = p.copy()
-                #                         p_new[i2] += 1
-                #                         min_coin_with_plan[j].add_plan(p_new)
-
-
-# print(min_coin_with_plan[88].num_coin, min_coin_with_plan[88].plan)
-print(min_coin_with_plan[6006].num_coin, min_coin_with_plan[6006].plan)
+# for i in range(m):
+#     for j in range(1, n+1):
+#         # This if statement builds up the possibility where we can use the current denomination
+#         # + some other previously completed sum to hit the target j 
+#         # j = 4m >=2, 4-2 = 2
+#         # When it goes through the plan 
+#         if j >= denom[i][0] and min_coin_with_plan[j - denom[i][0]] is not None: 
+#             for p in min_coin_with_plan[j - denom[i][0]].plan: 
+#                 if p[i] < denom[i][1]: 
+#                     if min_coin_with_plan[j] is None or min_coin_with_plan[j - denom[i][0]].num_coin + 1 < min_coin_with_plan[j].num_coin: 
+#                         p_new = p.copy()
+#                         p_new[i] += 1 
+#                         min_coin_with_plan[j] = MinCoin(min_coin_with_plan[j - denom[i][0]].num_coin + 1, p_new)
+#                     elif min_coin_with_plan[j - denom[i][0]].num_coin + 1 == min_coin_with_plan[j].num_coin: 
+#                         p_new = p.copy()
+#                         p_new[i] += 1 
+#                         min_coin_with_plan[j].add_plan(p_new)
+#                 else:
+#                     print(f"Checking for {j}, we minus {denom[i][0]} * {p[i]} and get {j - denom[i][0] * p[i]} and the plan for that is {min_coin_with_plan[j - denom[i][0] * p[i]].plan}" )
+#                     print(f"J is {j}, j - denom[i][0] * p[i] is {j - denom[i][0] * p[i]}")
+#                     pass
+#         else:
+#             print(f"We are checking for {j} and denom {i} which is {denom[i][0]}")
+#             pass
+       
+# for _ in min_coin_with_plan:
+#     print(_.plan, _.num_coin)
+# # print(min_coin_with_plan[4].num_coin, min_coin_with_plan[88].plan)
+# # print(min_coin_with_plan[6006].num_coin, min_coin_with_plan[6006].plan)
 
 
 
 
 
-print("--- %s seconds ---" % (time.time() - start_time))
+# print("--- %s seconds ---" % (time.time() - start_time))
 
