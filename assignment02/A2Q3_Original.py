@@ -15,7 +15,6 @@ print(denom)
 denom = [(1,2), (2,1)]
 
 # solution to each subproblem, contain (1) the min number of coins, and (2) all plans with sum of coins being the min num of coins, this is because there is limited supply for each coin, one plan of x cents may allow us to reach x+5 cents, another plan may allow us to reach x+10 cents, depending on whether we have extra coins of 5 cents or 10 cents
-
 class MinCoin:
     def __init__(self, n, p):
         self.num_coin = n
