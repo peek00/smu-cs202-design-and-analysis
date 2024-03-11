@@ -23,6 +23,7 @@ class MinCoin:
 m = len(denom)
 n = 12897
 n = 6006
+# n = 88
 
 start_time = time.time()
 
@@ -51,7 +52,21 @@ for i in range(m): # suppose we already have solutions using denom[0], denom[1],
                         p_new[i] += 1 # add one coin of denom[i][0]
                         min_coin_with_plan[j].add_plan(p_new)
                 else:
-                    #Handle the situation where all the current coins have been used, so you must look elsewhere
+                    # Since we used up all our denoms, why not I take J - the sum of all of the curret denom and find it?
+
+                    # If I get here, what it means is that the current sum j is greater than my denom considered
+                    # If I take j - the current denom, i have a solution for the remainder
+                    # But I do not have any more coins of the current denom to use
+                    # So what should I do? 
+                    p_new = min_coin_with_plan[j - p[i] * denom[i][0]].plan[0].copy()
+                    p_new[i] += p[i]
+                    if min_coin_with_plan[j] is None or min_coin_with_plan[j - p[i] * denom[i][0]].num_coin + p[i] < min_coin_with_plan[j].num_coin:
+                        min_coin_with_plan[j] = MinCoin(min_coin_with_plan[j - p[i] * denom[i][0]].num_coin + p[i], p_new)
+                    elif min_coin_with_plan[j - p[i] * denom[i][0]].num_coin + p[i] == min_coin_with_plan[j].num_coin:
+                        min_coin_with_plan[j].add_plan(p_new)
+
+                    print(f"We got here! We are looking at denom {denom[i][0]} for target {j} and p is {p} and p[i] is {p[i]} and denom[i][1] is {denom[i][1]}")
+                    print(f"So if we minus {p[i] * denom[i][0]} from {j} we get  {j - p[i] * denom[i][0]}, and the plan for that is {min_coin_with_plan[j - p[i] * denom[i][0]].plan}")
                     pass
                 # If I do not have a solution using the current denomination, i should take 
                 # j - all the various denoms in front 
@@ -74,8 +89,8 @@ for i in range(m): # suppose we already have solutions using denom[0], denom[1],
                 #                         min_coin_with_plan[j].add_plan(p_new)
 
 
-print(min_coin_with_plan[6005].num_coin)
-print(min_coin_with_plan[6006].num_coin)
+# print(min_coin_with_plan[88].num_coin, min_coin_with_plan[88].plan)
+print(min_coin_with_plan[6006].num_coin, min_coin_with_plan[6006].plan)
 
 
 
