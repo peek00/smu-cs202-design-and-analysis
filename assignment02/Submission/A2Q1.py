@@ -1,5 +1,13 @@
 import sys
 
+"""
+In the process of completing this assignment, I referenced the following sources to better understand the problem.
+- https://www.youtube.com/watch?v=xOlhR_2QCXY&ab_channel=CSDojo
+- https://www.youtube.com/watch?v=mBNrRy2_hVs&t=507s&ab_channel=NeetCode
+- https://www.youtube.com/watch?v=nLmhmB6NzcM&t=1111s&ab_channel=AbdulBari
+
+"""
+
 def bounded_knapsack(weight, value, quantity, limit):
     """
     Given n = total number of unique items, m = capacity of knapsack, q = total quantity of all items,

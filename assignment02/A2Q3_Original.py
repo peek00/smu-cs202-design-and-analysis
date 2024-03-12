@@ -30,13 +30,13 @@ min_coin_with_plan = [None] * (n + 1)
 min_coin_with_plan[0] = MinCoin(0, [0] * m)
 for i in range(m): # suppose we already have solutions using denom[0], denom[1], ..., denom[i-1], now we consider using denom[i]
     for j in range(1, n+1): # consider the min coin problem with sum j cents
-        if j == 6006:
-            print(f"Checking for target {j} and denom {i} which is {denom[i][0]}")
-            print(f"Condition 1 {j >= denom[i][0] and min_coin_with_plan[j - denom[i][0]] is not None}")
-            try:
-                print(f" we are checking if {j - denom[i][0]} is not None, and it is indeed {min_coin_with_plan[j - denom[i][0]].plan}")
-            except:
-                pass
+        # if j == 6006:
+        #     print(f"Checking for target {j} and denom {i} which is {denom[i][0]}")
+        #     print(f"Condition 1 {j >= denom[i][0] and min_coin_with_plan[j - denom[i][0]] is not None}")
+        #     try:
+        #         print(f" we are checking if {j - denom[i][0]} is not None, and it is indeed {min_coin_with_plan[j - denom[i][0]].plan}")
+        #     except:
+        #         pass
         if j >= denom[i][0] and min_coin_with_plan[j - denom[i][0]] is not None: # is it possible to use denom[i][0]? if yes, we can make up j cents by putting 1 coin of denom[i][0] and the min coin solution for j-denom[i][0]
             for p in min_coin_with_plan[j - denom[i][0]].plan: # for each possible plan of making j-denom[i][0]
                 if p[i] < denom[i][1]: # now I have a better solution, build a new obj as a solution for j
