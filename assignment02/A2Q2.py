@@ -13,11 +13,10 @@ def LCMS(a, b):
     # return answer
 
     commoners = get_longest_common_subsequence(a, b)
-    print("Commoners: ", len(commoners))
-    print(commoners)
+    # print("Commoners: ", len(commoners))
+    # print(commoners)
     answer = do_the_mountain_thing_third_time(commoners)
     return answer
-#
 
 # def get_common_elements_in_relative_order(a, b):
 #     """
@@ -50,20 +49,20 @@ def LCMS(a, b):
 #                 dp[i][j] = max(dp[i+1][j], dp[i][j+1])
 #     return commoners[::-1]
 
-def get_common_elements_in_relative_order(a, b):
-    # Create sets of both
-    a_set = set(a)
-    b_set = set(b)
-    for i in range(len(a)):
-        if a[i] not in b_set:
-            a[i] = None
-    for i in range(len(b)):
-        if b[i] not in a_set:
-            b[i] = None
+# def get_common_elements_in_relative_order(a, b):
+#     # Create sets of both
+#     a_set = set(a)
+#     b_set = set(b)
+#     for i in range(len(a)):
+#         if a[i] not in b_set:
+#             a[i] = None
+#     for i in range(len(b)):
+#         if b[i] not in a_set:
+#             b[i] = None
 
-    print(a)
-    print(b)
-    return []
+#     # print(a)
+#     # print(b)
+#     return []
 
 
 def do_the_mountain_thing_third_time(commoners):
@@ -190,14 +189,11 @@ def do_the_mountain_thing_correctly_this_time(commoners):
 num_pair = int(sys.stdin.readline())
 
 for _ in range(num_pair):
-    print("Case #", _+1, ": ", sep='', end='')
+    # print("Case #", _+1, ": ", sep='', end='')
     a = [int(s) for s in sys.stdin.readline().split()]
     b = [int(s) for s in sys.stdin.readline().split()]
     print(LCMS(a, b))
-    print()
+    # print()
 
-print("test")
-_ = [1,2,3,4,3,4,2,5]
-print(lengthOfLIS(_))
 
 

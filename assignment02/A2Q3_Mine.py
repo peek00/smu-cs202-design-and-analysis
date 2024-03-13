@@ -1,45 +1,3 @@
-### Min Coin With Plan
-
-# Q1: (1 mark) Which part is wrong? Is it min_coin_with_plan or min_coin_num_only
-The error is with `min_coin_with_plan`. I am currently unable to identify which exact part is wrong but I have an understanding of what and why it goes wrong. The code loops from the smallest denomation, 1, to the largest denomination, 462 for all values from 1 to the target sum. 
-
-If we use a larger target sum (eg 6005), when the code reaches the "end", it will have the solution [0, 0, 0, 0, 0, 0, 0, 2, 1, 12]. However, it is clear that it has not used ALL possible coins. This likely stops because it has used up all possible quantity of coins of the denomination 462, which is 12 as well. 
-
-When it looks at the sum 6006 after this, it will be considering the last denom (462). Hence when it takes 6006 - 462, it will get 5544 which uses 12 coins of 462 which is the limit. Therefore, it will believe the code cannot continue because the only solution left for 462 uses 1 coin of 462, which is no longer valid.
-
-At that point in time, the algorithm will not consider the possibility of taking 6005 + 1 which is a valid solution.
----
-> Question: Can array min_coin_num_only be changed to a 1-dimensional array?
-
-
-No, the array used to solve this cannot be changed to a 1-dimensional array. There are two factors to take note of, the quantity as well as the value of the denominations. This will require minimally a 2-dimensional array to account for both factors accordingly. 
-
----
-# Q2: (2 marks) Which element of dynamic programming has the wrong part violated? Is it the optimal sub-structure, or the overlapping of sub-problems?
-
-I believe the optimal sub-structure has been violated. The optimal substructure states that if a solution is optimal to a larger problem, it must be optimal to the sub-problem too. In this scenario, I believe the error here is that the optimal sub-structure is incorrectly defined and does not lead to an optimal solution for the larger problem.
-
-During the process of building the table, the code will always update and replace the `MinCoin` object of target j if the current solution requires a lesser number of coins. While this seems correct at first glance, it means that the as we are building the solution we are losing potential combinations. These potential combinations will be required when the number of coins we are looking for change exceeds a certain value.
-
-A more clear example with numbers is elaborated in Q3.
----
-
-# Q3: (2 marks) Give a counter example that fails this code.
-When the amount for coin change = `6006` cents, the corresponding optimal solution `should be using 13 coins, 1x $1, 2x $115, 1x $231, 12x $462` coins, but the code gives the following results `None`. 
-
-A second counter example is with the following denom of 2x $1 and 1x $2 coins. The logical solution to n=4 will be to use all the coins, but the `min_coin_with_plan` gives a None solution. This is because when it loops through all possibilities of using getting $1, it will create the and solve the subproblems $1 = 1 x $1, $2 = 2 x $1. When it then looks at the possibilities of getting $2, it will see that using 1 x $2 is a more effective way of getting $2, and override the entry using $1. 
-
-When we consider the value $4 with denomination $2, it will take $4 - $2 = $2, and then it will believe that there is no possible way to get $2 anymore. This would be an example of how the sub problem it solves does not solve the actual problem.
-
-# Q4: (5 marks) Propose a way to rectify the bug, please highlight your proposed correction in Python code with comments.
-
-My proposed solved solution runs into space complexity issue when solving for the given combination. My proposed solution involves changing the MinCoin datastructure to use a min heap instead to store the possible plans. In theory, when checking through the available plans, the algorithm will be able to find at least 1 plan where the combination of coins used are valid and this will remove the problem where possible combinatons are overwritten using the current `MinCoin` object.
-
-However, this approach resulted in storing all possible combinations for all possible values from 1 to n, where if both n and the number of available denomination and coins are high it runs into a memory error on my 32GB ram desktop.
-
-The code blocks is given below with more comments. 
-
-```
 
 import random, time
 # random generate 10 denominations
@@ -202,4 +160,3 @@ print(min_coin_with_plan[n].plan)
 print("--- %s seconds ---" % (time.time() - start))
 
 # MAYBE EACH TIME WE REPLACE, WE ADD THE SUM OF THE NUMBER TOO
-```
